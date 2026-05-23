@@ -1,0 +1,133 @@
+
+<style>
+* { box-sizing: border-box; }
+body { font-family: var(--font-sans); font-size: 12px; color: var(--color-text-primary); padding: 1rem 0; }
+h2 { font-size: 15px; font-weight: 500; margin: 1.5rem 0 0.4rem; color: var(--color-text-primary); border-bottom: 1px solid var(--color-border-tertiary); padding-bottom: 4px; }
+h3 { font-size: 13px; font-weight: 500; margin: 1rem 0 0.3rem; color: var(--color-text-secondary); }
+table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+th { background: #185FA5; color: #fff; font-weight: 500; font-size: 11px; padding: 6px 7px; border: 1px solid #0C447C; text-align: left; }
+td { padding: 5px 7px; border: 1px solid var(--color-border-tertiary); font-size: 11px; }
+tr:nth-child(even) td { background: var(--color-background-secondary); }
+.ip { color: #185FA5; font-weight: 500; font-family: var(--font-mono); }
+.group-label { background: #B5D4F4; font-weight: 500; text-align: center; color: #042C53; }
+.note { font-size: 10px; color: var(--color-text-secondary); margin: 0.3rem 0 0.8rem; background: var(--color-background-secondary); padding: 6px 10px; border-radius: 6px; border-left: 3px solid #378ADD; }
+.warn { background: #FAEEDA; border-left: 3px solid #BA7517; color: #633806; font-size: 11px; padding: 6px 10px; border-radius: 6px; margin-bottom: 0.8rem; }
+</style>
+
+<h2>📋 Part 1 — Subnet Table (VLSM from 10.0.0.0/8)</h2>
+<div class="note">Rule: sort by hosts largest→smallest, allocate sequentially. /26 = 62 hosts, /27 = 30 hosts, /28 = 14 hosts, /30 = 2 hosts.</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Subnet Description</th><th>VLAN ID</th><th>VLAN Name</th><th>Req. Hosts</th><th>Network/CIDR</th><th>First Usable</th><th>Last Usable</th><th>Broadcast</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>R Building</td><td>80</td><td>VLAN 80</td><td>61</td><td class="ip">10.0.0.0/26</td><td class="ip">10.0.0.1</td><td class="ip">10.0.0.62</td><td class="ip">10.0.0.63</td></tr>
+    <tr><td>S Building</td><td>40</td><td>VLAN 40</td><td>45</td><td class="ip">10.0.0.64/26</td><td class="ip">10.0.0.65</td><td class="ip">10.0.0.126</td><td class="ip">10.0.0.127</td></tr>
+    <tr><td>S Building</td><td>130</td><td>VLAN 130</td><td>31</td><td class="ip">10.0.0.128/26</td><td class="ip">10.0.0.129</td><td class="ip">10.0.0.190</td><td class="ip">10.0.0.191</td></tr>
+    <tr><td>N Building</td><td>60</td><td>VLAN 60</td><td>30</td><td class="ip">10.0.0.192/27</td><td class="ip">10.0.0.193</td><td class="ip">10.0.0.222</td><td class="ip">10.0.0.223</td></tr>
+    <tr><td>R Building</td><td>70</td><td>VLAN 70</td><td>25</td><td class="ip">10.0.0.224/27</td><td class="ip">10.0.0.225</td><td class="ip">10.0.0.254</td><td class="ip">10.0.0.255</td></tr>
+    <tr><td>N Building</td><td>50</td><td>VLAN 50</td><td>15</td><td class="ip">10.0.1.0/27</td><td class="ip">10.0.1.1</td><td class="ip">10.0.1.30</td><td class="ip">10.0.1.31</td></tr>
+    <tr><td>Main Building</td><td>10</td><td>VLAN 10</td><td>12</td><td class="ip">10.0.1.32/28</td><td class="ip">10.0.1.33</td><td class="ip">10.0.1.46</td><td class="ip">10.0.1.47</td></tr>
+    <tr><td>Main Building</td><td>20</td><td>VLAN 20</td><td>7</td><td class="ip">10.0.1.48/28</td><td class="ip">10.0.1.49</td><td class="ip">10.0.1.62</td><td class="ip">10.0.1.63</td></tr>
+    <tr><td>From SW-S to MIU-GW</td><td>—</td><td>—</td><td>7</td><td class="ip">10.0.1.64/28</td><td class="ip">10.0.1.65</td><td class="ip">10.0.1.78</td><td class="ip">10.0.1.79</td></tr>
+    <tr><td>From Main-MLS to MIU-GW</td><td>—</td><td>—</td><td>2</td><td class="ip">10.0.1.80/30</td><td class="ip">10.0.1.81</td><td class="ip">10.0.1.82</td><td class="ip">10.0.1.83</td></tr>
+    <tr><td>From N-MLS to MIU-GW</td><td>—</td><td>—</td><td>2</td><td class="ip">10.0.1.84/30</td><td class="ip">10.0.1.85</td><td class="ip">10.0.1.86</td><td class="ip">10.0.1.87</td></tr>
+    <tr><td>From S-MLS to MIU-GW</td><td>—</td><td>—</td><td>2</td><td class="ip">10.0.1.88/30</td><td class="ip">10.0.1.89</td><td class="ip">10.0.1.90</td><td class="ip">10.0.1.91</td></tr>
+    <tr><td>From R-MLS to MIU-GW</td><td>—</td><td>—</td><td>2</td><td class="ip">10.0.1.92/30</td><td class="ip">10.0.1.93</td><td class="ip">10.0.1.94</td><td class="ip">10.0.1.95</td></tr>
+  </tbody>
+</table>
+
+<h2>📋 Addressing Table (Based on actual topology diagram)</h2>
+<div class="warn">⚠️ Key rule: On each /30 point-to-point link — the MLS switch always gets the FIRST usable IP, MIU-GW always gets the SECOND usable IP.</div>
+
+<table>
+  <thead>
+    <tr><th>Device</th><th>Interface</th><th>IP Address</th><th>Subnet Mask</th><th>Default Gateway</th><th>VLAN ID</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="group-label" colspan="6">Main-MLS (Main Building Layer 3 Switch)</td></tr>
+    <tr><td rowspan="3">Main-MLS</td><td>G1/1/1 → to MIU-GW</td><td class="ip">10.0.1.81</td><td>255.255.255.252</td><td>—</td><td>—</td></tr>
+    <tr><td>VLAN 10 (SVI)</td><td class="ip">10.0.1.33</td><td>255.255.255.240</td><td>—</td><td>10</td></tr>
+    <tr><td>VLAN 20 (SVI)</td><td class="ip">10.0.1.49</td><td>255.255.255.240</td><td>—</td><td>20</td></tr>
+
+    <tr><td class="group-label" colspan="6">S-MLS (S Building Layer 3 Switch)</td></tr>
+    <tr><td rowspan="3">S-MLS</td><td>G1/1/1 → to MIU-GW</td><td class="ip">10.0.1.89</td><td>255.255.255.252</td><td>—</td><td>—</td></tr>
+    <tr><td>VLAN 130 (SVI)</td><td class="ip">10.0.0.129</td><td>255.255.255.192</td><td>—</td><td>130</td></tr>
+    <tr><td>VLAN 40 (SVI)</td><td class="ip">10.0.0.65</td><td>255.255.255.192</td><td>—</td><td>40</td></tr>
+
+    <tr><td class="group-label" colspan="6">N-MLS (N Building Layer 3 Switch)</td></tr>
+    <tr><td rowspan="3">N-MLS</td><td>G1/1/1 → to MIU-GW</td><td class="ip">10.0.1.85</td><td>255.255.255.252</td><td>—</td><td>—</td></tr>
+    <tr><td>VLAN 50 (SVI)</td><td class="ip">10.0.1.1</td><td>255.255.255.224</td><td>—</td><td>50</td></tr>
+    <tr><td>VLAN 60 (SVI)</td><td class="ip">10.0.0.193</td><td>255.255.255.224</td><td>—</td><td>60</td></tr>
+
+    <tr><td class="group-label" colspan="6">R-MLS (R Building Layer 3 Switch)</td></tr>
+    <tr><td rowspan="3">R-MLS</td><td>G1/0/5 → to MIU-GW</td><td class="ip">10.0.1.93</td><td>255.255.255.252</td><td>—</td><td>—</td></tr>
+    <tr><td>VLAN 70 (SVI)</td><td class="ip">10.0.0.225</td><td>255.255.255.224</td><td>—</td><td>70</td></tr>
+    <tr><td>VLAN 80 (SVI)</td><td class="ip">10.0.0.1</td><td>255.255.255.192</td><td>—</td><td>80</td></tr>
+
+    <tr><td class="group-label" colspan="6">MIU-GW (Main Gateway Router)</td></tr>
+    <tr><td rowspan="6">MIU-GW</td><td>Gig0/0 → to Main-MLS</td><td class="ip">10.0.1.82</td><td>255.255.255.252</td><td>—</td><td>—</td></tr>
+    <tr><td>Gig0/1 → to N-MLS</td><td class="ip">10.0.1.86</td><td>255.255.255.252</td><td>—</td><td>—</td></tr>
+    <tr><td>Gig0/0/0 → to S-MLS</td><td class="ip">10.0.1.90</td><td>255.255.255.252</td><td>—</td><td>—</td></tr>
+    <tr><td>Gig0/1/0 → to R-MLS</td><td class="ip">10.0.1.94</td><td>255.255.255.252</td><td>—</td><td>—</td></tr>
+    <tr><td>Gig0/2/0 → to SW-S</td><td class="ip">10.0.1.78</td><td>255.255.255.240</td><td>—</td><td>—</td></tr>
+    <tr><td>Gig0/3/0 → to ISP</td><td class="ip">209.165.200.226</td><td>255.255.255.240</td><td>—</td><td>—</td></tr>
+
+    <tr><td class="group-label" colspan="6">SW-S (Servers Room Switch)</td></tr>
+    <tr><td>SW-S</td><td>Interface to MIU-GW</td><td class="ip">10.0.1.65</td><td>255.255.255.240</td><td>10.0.1.78</td><td>—</td></tr>
+
+    <tr><td class="group-label" colspan="6">ISP (given — do not change)</td></tr>
+    <tr><td rowspan="3">ISP</td><td>Gig 0/0 → to MIU-GW</td><td class="ip">209.165.200.225</td><td>255.255.255.240</td><td>—</td><td>—</td></tr>
+    <tr><td>Gig 0/1 → to Branch-GW</td><td class="ip">64.100.1.1</td><td>255.255.255.224</td><td>—</td><td>—</td></tr>
+    <tr><td>Gig 0/2 → to Home Router</td><td class="ip">64.100.2.1</td><td>255.255.255.224</td><td>—</td><td>—</td></tr>
+
+    <tr><td class="group-label" colspan="6">Branch-GW (given — do not change)</td></tr>
+    <tr><td rowspan="3">Branch-GW</td><td>Gig 0/0.2 (VLAN 2)</td><td class="ip">192.168.2.1</td><td>255.255.255.0</td><td>—</td><td>2</td></tr>
+    <tr><td>Gig 0/0.3 (VLAN 3)</td><td class="ip">192.168.3.1</td><td>255.255.255.0</td><td>—</td><td>3</td></tr>
+    <tr><td>Gig 0/1 → to ISP</td><td class="ip">64.100.1.2</td><td>255.255.255.224</td><td>—</td><td>—</td></tr>
+
+    <tr><td class="group-label" colspan="6">Wireless Home Router (given — do not change)</td></tr>
+    <tr><td rowspan="2">Wireless Home Router</td><td>G0/1 → to ISP</td><td class="ip">64.100.2.2</td><td>255.255.255.224</td><td>—</td><td>—</td></tr>
+    <tr><td>Router IP (LAN side)</td><td class="ip">192.168.10.1</td><td>255.255.255.128</td><td>—</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<h2>📋 Hosts Address Table</h2>
+<div class="note">VLAN IDs for PCs are based on their building location from the topology. Servers are in the 10.0.1.64/28 range (SW-S subnet).</div>
+
+<table>
+  <thead>
+    <tr><th>PC</th><th>VLAN ID</th><th>IP Address</th><th>Subnet Mask</th><th>Default Gateway</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="group-label" colspan="5">MIU Main Campus</td></tr>
+    <tr><td>PC-1</td><td>10</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.1.33)</td></tr>
+    <tr><td>PC-2</td><td>10</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.1.33)</td></tr>
+    <tr><td>PC-3</td><td>20</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.1.49)</td></tr>
+    <tr><td>PC-4</td><td>130</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.0.129)</td></tr>
+    <tr><td>PC-5</td><td>130</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.0.129)</td></tr>
+    <tr><td>PC-6</td><td>40</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.0.65)</td></tr>
+    <tr><td>PC-7</td><td>50</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.1.1)</td></tr>
+    <tr><td>PC-8</td><td>60</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.0.193)</td></tr>
+    <tr><td>PC-9</td><td>70</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.0.225)</td></tr>
+    <tr><td>PC-10</td><td>80</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (10.0.0.1)</td></tr>
+    <tr><td class="group-label" colspan="5">MIU Branch 1</td></tr>
+    <tr><td>PC-11</td><td>2</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (192.168.2.1)</td></tr>
+    <tr><td>PC-12</td><td>3</td><td>From DHCP</td><td>From DHCP</td><td>From DHCP (192.168.3.1)</td></tr>
+    <tr><td class="group-label" colspan="5">Wireless Home Network</td></tr>
+    <tr><td>Laptop</td><td>—</td><td>192.168.10.10</td><td>255.255.255.128</td><td>192.168.10.1</td></tr>
+    <tr><td>Tablet</td><td>—</td><td>192.168.10.30</td><td>255.255.255.128</td><td>192.168.10.1</td></tr>
+    <tr><td>Smartphone</td><td>—</td><td>192.168.10.20</td><td>255.255.255.128</td><td>192.168.10.1</td></tr>
+    <tr><td class="group-label" colspan="5">Servers (in SW-S subnet 10.0.1.64/28, gateway = 10.0.1.78)</td></tr>
+    <tr><td>DHCP Server</td><td>—</td><td class="ip">10.0.1.68</td><td>255.255.255.240</td><td>10.0.1.78</td></tr>
+    <tr><td>Email Server</td><td>—</td><td class="ip">10.0.1.69</td><td>255.255.255.240</td><td>10.0.1.78</td></tr>
+    <tr><td>Web Server</td><td>—</td><td class="ip">10.0.1.70</td><td>255.255.255.240</td><td>10.0.1.78</td></tr>
+    <tr><td>DNS Server</td><td>—</td><td class="ip">10.0.1.71</td><td>255.255.255.240</td><td>10.0.1.78</td></tr>
+    <tr><td>NTP & Syslog Server</td><td>—</td><td class="ip">10.0.1.72</td><td>255.255.255.240</td><td>10.0.1.78</td></tr>
+  </tbody>
+</table>
+
+<div class="note">NAT addresses: 3rd IP from 209.165.200.224/28 = <strong>209.165.200.226</strong> (Dynamic PAT pool). 4th IP = <strong>209.165.200.227</strong> (Static NAT → Web Server 10.0.1.70).</div>
