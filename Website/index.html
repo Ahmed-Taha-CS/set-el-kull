@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ست الكل · digital chef's guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Lateef&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-image"></div>
+        <div class="hero-overlay"></div>
+        <div class="scroll-indicator" onclick="document.getElementById('signin').scrollIntoView({behavior: 'smooth'})">
+            <i class="fas fa-chevron-down"></i>
+            <p>Scroll down to sign in</p>
+        </div>
+    </section>
+
+    <!-- Sign In Section -->
+    <section id="signin" class="signin-section">
+        <div class="signin-container">
+            <div class="welcome-message">
+                <div class="small-logo">
+                    <img src="logoo.png" alt="ست الكل logo">
+                </div>
+                <h2 class="arabic-title">ست الكل</h2>
+                <p>Welcome to your digital kitchen,<br>where tradition meets simplicity.</p>
+                <p>Discover the art of Oriental cooking<br>with clear, step-by-step recipes.</p>
+                <div class="quote">
+                    <i class="fas fa-quote-left"></i> طبخ زي الشيف <i class="fas fa-quote-right"></i>
+                </div>
+            </div>
+            <div class="signin-card">
+                <h3>Begin Your Culinary Journey</h3>
+                <div class="auth-buttons">
+                    <button class="auth-btn-large" id="signupBtn">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                    <button class="auth-btn-large secondary" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </div>
+               
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Main App -->
+    <div id="mainApp">
+        <div class="app-wrapper">
+            <!-- Taskbar -->
+            <div class="taskbar">
+                <div class="logo-area" id="logoHomeBtn" title="Go to Home">
+                    <div class="logo-icon">
+                        <img src="logoo.png" alt="ست الكل logo">
+                    </div>
+                    <span class="site-name arabic-title">ست الكل</span>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="taskbar-search" id="taskbarSearchWrapper">
+                    <input type="text" class="taskbar-search-input" id="taskbarSearchInput" placeholder="Search recipes…" autocomplete="off">
+                    <i class="fas fa-search taskbar-search-icon"></i>
+                    <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                </div>
+
+                <div class="user-actions">
+                    <div class="favorites-container">
+                        <button class="favorites-btn" id="favoritesBtn">
+                            <i class="fas fa-heart"></i> Favorites
+                            <span class="favorites-count" id="favoritesCount">0</span>
+                        </button>
+                        <div class="favorites-dropdown" id="favoritesDropdown">
+                            <div class="favorites-header">
+                                <h3>Your Favorite Recipes</h3>
+                                <button class="clear-favorites" id="clearFavorites">Clear all</button>
+                            </div>
+                            <div class="favorites-list" id="favoritesList">
+                                <div class="empty-favorites">No favorites yet. Start saving recipes!</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="auth-btn" id="mainSignupBtn"><i class="fas fa-user-plus"></i> Sign up</button>
+                    <button class="auth-btn" id="mainLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    <!-- Sign Out Button (hidden by default) -->
+                    <button class="auth-btn" id="signOutBtn" style="display: none;"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Admin Panel (hidden by default) -->
+            <div id="adminPanel" class="admin-panel" style="display: none;">
+                <div class="admin-header">
+                    <h2><i class="fas fa-crown"></i> Admin Dashboard</h2>
+                    <button class="close-admin" id="closeAdminBtn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="categories">Categories</button>
+                    <button class="admin-tab" data-tab="recipes">Recipes</button>
+                    <button class="admin-tab" data-tab="comments">Comments</button>
+                </div>
+                
+                <!-- Categories Management -->
+                <div id="adminCategories" class="admin-tab-content active">
+                    <div class="admin-actions">
+                        <button class="admin-action-btn" id="addCategoryBtn"><i class="fas fa-plus"></i> Add Category</button>
+                    </div>
+                    <div class="admin-list" id="categoriesList"></div>
+                </div>
+
+                <!-- Recipes Management -->
+                <div id="adminRecipes" class="admin-tab-content">
+                    <div class="admin-filters">
+                        <select id="recipeCategoryFilter">
+                            <option value="">All Categories</option>
+                        </select>
+                        <button class="admin-action-btn" id="addRecipeBtn"><i class="fas fa-plus"></i> Add Recipe</button>
+                    </div>
+                    <div class="admin-list" id="recipesList"></div>
+                </div>
+
+                <!-- Comments Management -->
+                <div id="adminComments" class="admin-tab-content">
+                    <div class="admin-filters">
+                        <select id="commentRecipeFilter">
+                            <option value="">All Recipes</option>
+                        </select>
+                    </div>
+                    <div class="admin-list" id="adminCommentsList"></div>
+                </div>
+            </div>
+
+            <!-- Category/Recipe Modals -->
+            <div id="categoryModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('categoryModal')">&times;</span>
+                    <h2 id="categoryModalTitle">Add Category</h2>
+                    <form id="categoryForm" onsubmit="event.preventDefault(); saveCategory();">
+                        <input type="hidden" id="categoryId">
+                        
+                        <label for="categoryName">Category Name:</label>
+                        <input type="text" id="categoryName" required>
+                        
+                        <label for="categoryIcon">Icon (Font Awesome class):</label>
+                        <input type="text" id="categoryIcon" value="fas fa-utensils" required>
+                        <small>e.g., fas fa-leaf, fas fa-candy-cane, fas fa-truck</small>
+                        
+                        <button type="submit" class="auth-btn-large">Save Category</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="recipeModal" class="modal">
+                <div class="modal-content recipe-modal">
+                    <span class="close" onclick="closeModal('recipeModal')">&times;</span>
+                    <h2 id="recipeModalTitle">Add Recipe</h2>
+                    <form id="recipeForm" onsubmit="event.preventDefault(); saveRecipe();">
+                        <input type="hidden" id="recipeId">
+                        <input type="hidden" id="recipeCategoryKey">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recipeName">Recipe Name:</label>
+                                <input type="text" id="recipeName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipeArabic">Arabic Name:</label>
+                                <input type="text" id="recipeArabic" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recipeCategory">Category:</label>
+                                <select id="recipeCategory" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipeTime">Prep Time:</label>
+                                <input type="text" id="recipeTime" value="30 min" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recipeDifficulty">Difficulty:</label>
+                                <select id="recipeDifficulty" required>
+                                    <option value="Easy">Easy</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Hard">Hard</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipeServings">Servings:</label>
+                                <input type="text" id="recipeServings" value="4 servings" required>
+                            </div>
+                        </div>
+
+                        <!-- NEW CALORIE FIELDS -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recipeCalories">🔥 Calories (per serving):</label>
+                                <input type="number" id="recipeCalories" value="400" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipeProtein">💪 Protein (g):</label>
+                                <input type="number" id="recipeProtein" value="20" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recipeCarbs">🍚 Carbs (g):</label>
+                                <input type="number" id="recipeCarbs" value="40" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipeFats">🥑 Fats (g):</label>
+                                <input type="number" id="recipeFats" value="15" required>
+                            </div>
+                        </div>
+
+                        <label for="recipeDescription">Description:</label>
+                        <textarea id="recipeDescription" rows="3" required></textarea>
+
+                        <label for="recipeEmoji">Emoji:</label>
+                        <input type="text" id="recipeEmoji" value="🍽️" required>
+
+                        <label for="recipeImage">Image Filename:</label>
+                        <input type="text" id="recipeImage" placeholder="e.g., dish.jpeg">
+
+                        <label for="recipeTags">Tags (comma separated):</label>
+                        <input type="text" id="recipeTags" placeholder="Easy, Oriental, Quick" required>
+
+                        <label for="recipeIngredients">Ingredients (one per line):</label>
+                        <textarea id="recipeIngredients" rows="5" required></textarea>
+
+                        <label for="recipeInstructions">Instructions (one per line):</label>
+                        <textarea id="recipeInstructions" rows="8" required></textarea>
+
+                        <button type="submit" class="auth-btn-large">Save Recipe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Welcome & Categories -->
+            <div class="categories-welcome">
+                ✨ Choose a category to begin your culinary journey ✨
+            </div>
+
+            <!-- Calorie Search - Collapsible -->
+<div class="calorie-search-wrapper">
+    <button class="calorie-toggle-btn" id="calorieToggleBtn">
+        <i class="fas fa-fire-flame"></i>
+        <span>Search by Calories</span>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+    </button>
+    
+    <div class="calorie-search-container" id="calorieSearchContainer" style="display: none;">
+        <div class="calorie-search-box">
+            <h3><i class="fas fa-fire-flame"></i> Filter by Calories</h3>
+            <div class="calorie-range">
+                <div class="range-inputs">
+                    <div class="input-group">
+                        <label>Min (kcal)</label>
+                        <input type="number" id="calorieMin" placeholder="0" value="0" min="0" max="680" step="1">
+                    </div>
+                    <span class="range-separator">—</span>
+                    <div class="input-group">
+                        <label>Max (kcal)</label>
+                        <input type="number" id="calorieMax" placeholder="680" value="680" min="0" max="680" step="1">
+                    </div>
+                    <button id="applyCalorieFilter" class="calorie-filter-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <button id="clearCalorieFilter" class="calorie-clear-btn">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+                <div class="calorie-hint">
+                    <i class="fas fa-info-circle"></i> 
+                    <span>Showing recipes with <span id="calorieRangeDisplay">0 - 680</span> calories</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            <div class="category-icons" id="categoryIcons">
+                <!-- Categories will be dynamically loaded -->
+            </div>
+
+            <!-- Back Button -->
+            <button class="back-button" id="backButton" style="display: none;">
+                <i class="fas fa-arrow-left"></i> Back to Categories
+            </button>
+
+            <!-- Categories Container -->
+            <div id="categoriesContainer"></div>
+
+            <!-- Recipe Detail Page -->
+            <div id="recipeDetailPage" class="recipe-detail-page">
+                <div class="detail-nav">
+                    <button class="back-to-category" id="backToCategoryBtn">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <div class="detail-actions">
+                        <button class="detail-favorite-btn" id="detailFavoriteBtn">
+                            <i class="far fa-heart"></i> Add to Favorites
+                        </button>
+                        <!-- Admin recipe actions (hidden by default) -->
+                        <div class="admin-recipe-actions" id="adminRecipeActions" style="display: none;">
+                            <button class="detail-edit-btn" id="editRecipeBtn"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="detail-delete-btn" id="deleteRecipeBtn"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-header-section">
+                    <span class="detail-category-tag" id="detailCategory">Street Food</span>
+                    <h1 class="detail-title" id="detailTitle">Kebda (Liver Sandwich)</h1>
+                    <div class="detail-title-arabic" id="detailArabic">كبدة</div>
+                    <div class="detail-description" id="detailDescription">
+                        Spiced sautéed liver with peppers and onions, served in a soft roll. Bold flavors, pure street food energy.
+                    </div>
+                    <!-- NEW CALORIE CARD -->
+                    <div class="calorie-card" id="calorieCard">
+                        <div class="calorie-header">
+                            <i class="fas fa-fire-flame"></i>
+                            <span class="calorie-value" id="detailCalories">0</span>
+                            <span class="calorie-unit">kcal</span>
+                            <span class="per-serving">per serving</span>
+                        </div>
+                        <div class="macro-row">
+                            <div class="macro-item protein">
+                                <i class="fas fa-dumbbell"></i>
+                                <span class="macro-label">Protein</span>
+                                <span class="macro-value" id="detailProtein">0</span>
+                                <span class="macro-unit">g</span>
+                            </div>
+                            <div class="macro-item carbs">
+                                <i class="fas fa-bread-slice"></i>
+                                <span class="macro-label">Carbs</span>
+                                <span class="macro-value" id="detailCarbs">0</span>
+                                <span class="macro-unit">g</span>
+                            </div>
+                            <div class="macro-item fats">
+                                <i class="fas fa-oil-can"></i>
+                                <span class="macro-label">Fats</span>
+                                <span class="macro-value" id="detailFats">0</span>
+                                <span class="macro-unit">g</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-tags" id="detailTags"></div>
+                <div class="detail-meta" id="detailMeta">
+                    <span class="meta-item"><i class="far fa-clock"></i> <span id="detailTime">15 min</span></span>
+                    <span class="meta-item"><i class="fas fa-utensils"></i> <span id="detailServings">4 servings</span></span>
+                    <span class="meta-item"><i class="fas fa-chart-line"></i> <span id="detailDifficulty">Easy</span></span>
+                </div>
+                <div class="ingredients-section">
+                    <h2 class="section-title">Ingredients</h2>
+                    <ul class="ingredients-list" id="ingredientsList"></ul>
+                </div>
+                <div class="instructions-section">
+                    <h2 class="section-title">Instructions</h2>
+                    <ol class="instructions-list" id="instructionsList"></ol>
+                </div>
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h2 class="comments-title">Comments</h2>
+                        <span class="comment-count" id="commentCount">0 comments</span>
+                    </div>
+                    <div class="comment-form" id="commentForm">
+                        <textarea placeholder="Share your thoughts about this recipe..."></textarea>
+                        <div class="comment-form-footer">
+                            <div class="login-prompt" id="loginPrompt">
+                                <a href="#" id="signInToComment">Sign in</a> to leave a comment
+                            </div>
+                            <button class="auth-btn" id="postCommentBtn" style="display: none;">Post Comment</button>
+                        </div>
+                    </div>
+                    <div class="comments-list" id="commentsList">
+                        <!-- Comments will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+            <footer>👩‍🍳 ست الكل — clear, structured recipes, just like a digital chef</footer>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('signupModal')">&times;</span>
+            <h2>Sign Up</h2>
+            <form id="signupForm" onsubmit="event.preventDefault(); handleSignup();">
+                <label for="signupName">Name:</label>
+                <input type="text" id="signupName" required>
+                <span id="signupNameError" class="error"></span>
+
+                <label for="signupEmail">Email:</label>
+                <input type="email" id="signupEmail" required>
+                <span id="signupEmailError" class="error"></span>
+
+                <label for="signupPhone">Phone (optional):</label>
+                <input type="text" id="signupPhone">
+                <span id="signupPhoneError" class="error"></span>
+
+                <label for="signupPassword">Password (min 6 characters):</label>
+                <input type="password" id="signupPassword" required>
+                <span id="signupPasswordError" class="error"></span>
+
+                <label for="signupConfirm">Password Confirm:</label>
+                <input type="password" id="signupConfirm" required>
+                <span id="signupConfirmError" class="error"></span>
+
+                <button type="submit" class="auth-btn-large">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" required>
+                <span id="loginEmailError" class="error"></span>
+
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" required>
+                <span id="loginPasswordError" class="error"></span>
+
+                <button type="submit" class="auth-btn-large">Log In</button>
+            </form>
+        </div>
+    </div>
+
+                <script src="script.js"></script>
+</body>
+</html>
